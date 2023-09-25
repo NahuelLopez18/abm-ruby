@@ -1,0 +1,30 @@
+<h1>Lista de Productos</h1>
+
+<%= link_to 'Nuevo Producto', new_product_path, class: 'btn btn-primary m-4' %>
+
+<%= form_tag(products_path, method: :get, class: "form-inline my-2 my-lg-0") do %>
+  <%= text_field_tag :q, params[:q], placeholder: "Buscar productos" %>
+  <%= submit_tag "Buscar", class: "btn btn-outline-success my-2 my-sm-0" %>
+<% end %>
+
+<% if notice.present? %>
+  <div class="notice"><%= notice %></div>
+  <script>
+    setTimeout(function() {
+      document.querySelector('.notice').style.display = 'none';
+    }, 5000);
+  </script>
+<% end %>
+
+<ul>
+  <% @products.each do |product| %>
+    <li>
+      <%= link_to product.name, product %> |
+      <%= link_to 'Editar', edit_product_path(product), class: 'btn btn-primary' %> |
+      <%= link_to 'Eliminar', product ,data: {turbo_method: :delete, turbo_confirm: 'estás seguro?' }, class: 'btn btn-sm btn-danger' %> 
+    </li>
+  
+  <% end %>
+</ul>
+
+<%= will_paginate @products %>
