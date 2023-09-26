@@ -17,6 +17,8 @@ gem 'popper_js'
 gem 'jquery-rails'
 #Sassc
 gem 'sassc'
+#Rails Controller Testing
+gem 'rails-controller-testing'
 
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"

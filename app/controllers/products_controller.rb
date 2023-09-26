@@ -22,7 +22,23 @@ class ProductsController < ApplicationController
   
     def create
       @product = Product.new(product_params)
-    
+
+      day_of_month = Time.now.day
+  
+      if day_of_month >= 1 && day_of_month <= 15
+        if @product.price > 5000
+          @product.errors.add(:price, "Debe ser menor o igual a 5000 en los primeros 15 días del mes")
+          render :new
+          return
+        end
+      else
+        if @product.price <= 5000
+          @product.errors.add(:price, "Debe ser mayor a 5000 después del día 15 del mes")
+          render :new
+          return
+        end
+      end
+  
       if @product.save
         redirect_to @product, notice: 'Producto creado exitosamente.'
       else
