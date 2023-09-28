@@ -2,15 +2,23 @@ class ProductsController < ApplicationController
     before_action :set_product, only: [:show, :edit, :update, :destroy]
 
     def index
-      @products = if params[:q]
-        Product.where("name LIKE ?", "%#{params[:q]}%")
+      if params[:q]
+        @products = Product.where("name LIKE ?", "%#{params[:q]}%").paginate(page: params[:page], per_page: 10)
       else
-        Product.all
-      end.paginate(page: params[:page], per_page: 1)
+        @products = Product.all.paginate(page: params[:page], per_page: 10)
+      end
+    
+      respond_to do |format|
+        format.html
+        format.json { render json: @products }
+      end
     end
-
+    
     def show
-      render json: @product
+      respond_to do |format|
+        format.html
+        format.json { render json: @product }
+      end
     end
   
     def new
@@ -19,46 +27,44 @@ class ProductsController < ApplicationController
   
     def edit
     end
-  
+
     def create
       @product = Product.new(product_params)
-
-      day_of_month = Time.now.day
-  
-      if day_of_month >= 1 && day_of_month <= 15
-        if @product.price > 5000
-          @product.errors.add(:price, "Debe ser menor o igual a 5000 en los primeros 15 días del mes")
-          render :new
-          return
+      
+      respond_to do |format|
+        if @product.save
+          format.html { redirect_to @product, notice: 'Producto creado exitosamente.' }
+          format.json { render json: @product, status: :created, location: @product }
+        else
+          format.html { render :new }
+          format.json { render json: @product.errors, status: :unprocessable_entity }
         end
-      else
-        if @product.price <= 5000
-          @product.errors.add(:price, "Debe ser mayor a 5000 después del día 15 del mes")
-          render :new
-          return
-        end
-      end
-  
-      if @product.save
-        redirect_to @product, notice: 'Producto creado exitosamente.'
-      else
-        render :new
       end
     end
-  
+    
     def update
-      if @product.update(product_params)
-        redirect_to @product, notice: 'Producto actualizado exitosamente.'
-      else
-        render :edit
+      respond_to do |format|
+        if @product.update(product_params)
+          format.html { redirect_to @product, notice: 'Producto actualizado exitosamente.' }
+          format.json { render json: @product, status: :ok, location: @product }
+        else
+          format.html { render :edit }
+          format.json { render json: @product.errors, status: :unprocessable_entity }
+        end
       end
     end
   
     def destroy
+      @deleted_product = @product.dup
       @product.destroy
-      redirect_to products_url, notice: 'Producto eliminado exitosamente.'
+    
+      respond_to do |format|
+        format.html { redirect_to products_url, notice: 'Producto eliminado exitosamente.' }
+        format.json { render json: @deleted_product, status: :ok }
+      end
     end
-
+    
+    
     private
 
     def set_product

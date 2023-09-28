@@ -11,15 +11,21 @@ gem 'will_paginate'
 
 #Bootstrap
 gem 'bootstrap', '~> 4.5'
+
 #Popper
 gem 'popper_js'
+
 #Jquery Rails
 gem 'jquery-rails'
+
 #Sassc
 gem 'sassc'
+
 #Rails Controller Testing
 gem 'rails-controller-testing'
 
+#Rails  language
+gem 'rails-i18n'
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.0.8"
