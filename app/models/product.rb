@@ -1,9 +1,8 @@
 class Product < ApplicationRecord
   validates :name, presence: true, length: { maximum: 255, minimum: 3 }
   validates :description, presence: true, length: { maximum: 255, minimum: 3 }
-    validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
-
-    validate :price_within_limit_based_on_day
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validate :price_within_limit_based_on_day
 
     def price_within_limit_based_on_day
       day_of_month = Time.now.day
